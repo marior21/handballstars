@@ -18,8 +18,39 @@ import {
 import Realm from 'realm'
 import Jugadores from './components/jugadores.js'
 import { db } from './config/firebase'
-import {JugadoresSchema} from './data/jugadoresSchema'
-import {JugadorSchema} from './data/jugadorSchema'
+//import { JugadoresSchema } from './data/jugadoresSchema.js'
+//import { JugadorSchema } from './data/jugadorSchema.js'
+
+const JugadorSchema = {
+  name: 'Jugador',
+  properties: {
+    Altura: 'string',
+    Biografia: 'string',
+    Edad: 'int',
+    EquipoActual: 'string',
+    FechaNacimiento: 'string',
+    Identificador: 'int',
+    LugarNacimiento: 'string',
+    Nacionalidad: 'string',
+    NacionalidadCodigo: 'string',
+    NombreApellidos: 'string',
+    Numero: 'int',
+    Peso: 'string',
+    Puesto: 'string',
+    UrlImagen: 'string',
+    UrlImagenBandera: 'string',
+    UrlMasInformacion: 'string',
+    UrlMasVideos: 'string',
+  }
+};
+
+const JugadoreSchema = {
+  name: 'Jugadores',
+  properties: {
+    jugadores: 'Jugador[]',
+    fechaActual: 'string'
+  }
+};
 
 export default class handballstars extends Component {
   constructor() {
@@ -41,28 +72,62 @@ export default class handballstars extends Component {
   }
 
   componentWillMount() {
+    let actualizarJugadores = false
+    db.ref('/FechaActual').once('value', snapshot => {
+      const fechaActual = snapshot.val()
+      let fechaBBDD;
+      console.log(fechaActual)
+      Realm.open({
+        schema: [JugadoreSchema]
+      }).then(realm => {
+          if(realm.objects('Jugadores').length === 0) {
+            actualizarJugadores = true           
+          }
+          else {
+            fechaBBDD = realm.objects('Jugadores').fechaActual
+            if(fechaBBDD !== fechaActual) {
+              actualizarJugadores = true
+            }
+          }
+      })
+    })
     db.ref('/Jugadores').once('value', snapshot => {
       const losJugadores = snapshot.val()
-      this.setState({
-        isReady: true,
-        jugadores: losJugadores        
-      });
-      Realm.open({schema: [JugadoresSchema, JugadorSchema]})
-      .then(realm => {
-        losJugadores.forEach(function(cadaJugador) {
-          realm.write(() => {
-            realm.create('Jugador', cadaJugador);
-          });
-        }, this);
-        // ... use the realm instance to read and modify data
 
+      Realm.open({
+        schema: [JugadorSchema],
+        /*schemaVersion: 2,
+        migration: (oldRealm, newRealm) => { 
+          newRealm.deleteAll()
+        }*/
       })
+        .then(realm => {
+          console.log(realm.objects("Jugador").length)
+          console.log(realm.path)
+          if (realm.objects("Jugador").length === 0) {
+            losJugadores.forEach(function (cadaJugador) {
+              realm.write(() => {
+                realm.create('Jugador', cadaJugador);
+              });
+
+            }, this)
+          }
+          else {
+            this.setState({
+              isReady: true,
+              jugadores: realm.objects("Jugador")
+            });
+          }
+
+          // ... use the realm instance to read and modify data
+
+        })
       //.then(realm => {
-       // realm.write(() => {
-         // realm.create('Jugador', cadaJugador);
-        //});
-      });
-    
+      // realm.write(() => {
+      // realm.create('Jugador', cadaJugador);
+      //});
+      //  });
+
     })
   }
 
@@ -70,15 +135,15 @@ export default class handballstars extends Component {
     this.setState({ filtro: e.nativeEvent.text })
   }
 
-  handleOnFav(jugador,favorito) {
+  handleOnFav(jugador, favorito) {
     let jugadores = this.state.jugadoresFavs
-    if(favorito) {
+    if (favorito) {
       jugadores.push(jugador)
-    } 
+    }
     else {
       jugadores.pop(jugador)
     }
-    this.setState({jugadoresFavs : jugadores})
+    this.setState({ jugadoresFavs: jugadores })
   }
 
   render() {
