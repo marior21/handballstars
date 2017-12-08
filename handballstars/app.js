@@ -44,10 +44,10 @@ const JugadorSchema = {
   }
 };
 
-const JugadoreSchema = {
-  name: 'Jugadores',
+const JugadoreWrapperSchema = {
+  name: 'JugadoreWrapper',
   properties: {
-    jugadores: 'Jugador[]',
+    //jugadores: 'Jugador[]',
     fechaActual: 'string'
   }
 };
@@ -72,63 +72,72 @@ export default class handballstars extends Component {
   }
 
   componentWillMount() {
-    let actualizarJugadores = false
+    let actualizarJugadores = true
+    let losJugadores
     db.ref('/FechaActual').once('value', snapshot => {
       const fechaActual = snapshot.val()
       let fechaBBDD;
       console.log(fechaActual)
       Realm.open({
-        schema: [JugadoreSchema]
+        schema: [JugadorSchema, JugadoreWrapperSchema]
       }).then(realm => {
-          if(realm.objects('Jugadores').length === 0) {
-            actualizarJugadores = true           
+        console.log(realm.path)
+        losJugadores = realm.objects('Jugador')
+        if (losJugadores.length === 0) {
+          actualizarJugadores = true
+          console.log('sin jugadores')
+        }
+        else {
+          fechaBBDD = realm.objects('JugadoreWrapper').fechaActual
+          console.log(fechaBBDD)
+          if (fechaBBDD !== fechaActual) {
+            actualizarJugadores = true
+            console.log('actualizar jugadores')
           }
-          else {
-            fechaBBDD = realm.objects('Jugadores').fechaActual
-            if(fechaBBDD !== fechaActual) {
-              actualizarJugadores = true
-            }
-          }
-      })
-    })
-    db.ref('/Jugadores').once('value', snapshot => {
-      const losJugadores = snapshot.val()
+        }
+        if (actualizarJugadores) {
+          db.ref('/Jugadores').once('value', snapshot => {
+            losJugadores = snapshot.val()
+            /*Realm.open({
+              schema: [JugadorSchema, JugadoreWrapperSchema]
+            }).then(realm => {
+              if (realm.objects('Jugador') &&
+                realm.objects('Jugador').length > 0) {
+                realm.objects('Jugador').forEach(function (cadaJugador) {
+                  realm.write(() => {
+                    realm.delete(cadaJugador)
+                  })
+                }, this)
+              }
+              losJugadores.forEach(function (cadaJugador) {
+                realm.write(() => {
+                  realm.create('Jugador', cadaJugador)
+                })
+              }, this)
+              if (realm.objects('JugadoreWrapper').fechaActual) {
+                realm.objects('JugadoreWrapper').fechaActual = fechaActual
+              }
+              else {
+                const objeto = {
+                  fechaActual: fechaActual
+                }
+                realm.write(() => {
+                  realm.create('JugadoreWrapper', objeto)
+                })
+              }
 
-      Realm.open({
-        schema: [JugadorSchema],
-        /*schemaVersion: 2,
-        migration: (oldRealm, newRealm) => { 
-          newRealm.deleteAll()
-        }*/
-      })
-        .then(realm => {
-          console.log(realm.objects("Jugador").length)
-          console.log(realm.path)
-          if (realm.objects("Jugador").length === 0) {
-            losJugadores.forEach(function (cadaJugador) {
-              realm.write(() => {
-                realm.create('Jugador', cadaJugador);
-              });
-
-            }, this)
-          }
-          else {
+            })*/
             this.setState({
               isReady: true,
-              jugadores: realm.objects("Jugador")
-            });
-          }
-
-          // ... use the realm instance to read and modify data
-
-        })
-      //.then(realm => {
-      // realm.write(() => {
-      // realm.create('Jugador', cadaJugador);
-      //});
-      //  });
+              jugadores: losJugadores
+            })
+          })
+         }
+        
+      })
 
     })
+
   }
 
   handleOnSearch(e) {

@@ -21,26 +21,28 @@ export default class Jugadores extends Component {
     }
 
     render() {
-        return (<List dataArray={this.props.dataSource}
+      /*  return (<View>
+            <List dataArray={this.props.dataSource}
+            style={{flex:1,flexDirection:'row',flexWrap:'wrap'}}
             renderRow={
                 (item) => {
                     return (
-                        <ListItem>
+                        <ListItem style={{width:150,height:250, alignItems:'center',justifyContent:'center'}}> 
                             <Jugador onFav={this.props.onFav} key={item.Identificador}
                                 datos={item} />
                         </ListItem>
                     )
                 }
-            }></List>)
-        /* return (
-             <View>
+            }></List></View>)*/
+         return (
+             <View style={{flex:1,flexDirection:'row',flexWrap:'wrap',justifyContent:'center'}}>
              {this.props.dataSource.map(
                  item => {
-                     <Jugador key={item.Identificador}
-                     nombreApellidos={item.NombreApellidos} />
+                     return(<View style={{width:350,height:160}}><Jugador onFav={this.props.onFav} key={item.Identificador}
+                     datos={item} /></View>)
                  }
              )}
              </View>
-         )*/
+         )
     }
 }
