@@ -21,28 +21,32 @@ export default class Jugadores extends Component {
     }
 
     render() {
-      /*  return (<View>
-            <List dataArray={this.props.dataSource}
-            style={{flex:1,flexDirection:'row',flexWrap:'wrap'}}
-            renderRow={
-                (item) => {
-                    return (
-                        <ListItem style={{width:150,height:250, alignItems:'center',justifyContent:'center'}}> 
-                            <Jugador onFav={this.props.onFav} key={item.Identificador}
-                                datos={item} />
-                        </ListItem>
-                    )
-                }
-            }></List></View>)*/
-         return (
-             <View style={{flex:1,flexDirection:'row',flexWrap:'wrap',justifyContent:'center'}}>
-             {this.props.dataSource.map(
-                 item => {
-                     return(<View style={{width:350,height:160}}><Jugador onFav={this.props.onFav} key={item.Identificador}
-                     datos={item} /></View>)
-                 }
-             )}
-             </View>
-         )
+        /*  return (<View>
+              <List dataArray={this.props.dataSource}
+              style={{flex:1,flexDirection:'row',flexWrap:'wrap'}}
+              renderRow={
+                  (item) => {
+                      return (
+                          <ListItem style={{width:150,height:250, alignItems:'center',justifyContent:'center'}}> 
+                              <Jugador onFav={this.props.onFav} key={item.Identificador}
+                                  datos={item} />
+                          </ListItem>
+                      )
+                  }
+              }></List></View>)*/
+        return (
+            <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+                {this.props.dataSource.map(
+                    item => {
+                        return (
+                            <View style={{ width: 350, height: 160 }}>
+                                <Jugador onFav={this.props.onFav}
+                                    key={item.Identificador}
+                                    datos={item} />
+                            </View>)
+                    }
+                )}
+            </View>
+        )
     }
 }
