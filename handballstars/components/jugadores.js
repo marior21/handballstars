@@ -39,9 +39,8 @@ export default class Jugadores extends Component {
                 {this.props.dataSource.map(
                     item => {
                         return (
-                            <View style={{ width: 350, height: 160 }}>
+                            <View style={{ width: 350, height: 160 }} key={item.Identificador}>
                                 <Jugador onFav={this.props.onFav}
-                                    key={item.Identificador}
                                     datos={item} />
                             </View>)
                     }

@@ -173,7 +173,7 @@ export default class handballstars extends Component {
         break;
     }
     jugadores = jugadores.filter(
-      jugador => jugador.NombreApellidos.toUpperCase().includes(
+      jugador => jugador.Nombre.toUpperCase().includes(
         this.state.filtro.toUpperCase()
       )
     )
