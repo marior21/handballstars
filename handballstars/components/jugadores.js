@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {
     StyleSheet,
-    View
+    View,
+    FlatList
 } from 'react-native';
 import {
     Container,
@@ -36,15 +37,15 @@ export default class Jugadores extends Component {
               }></List></View>)*/
         return (
             <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
-                {this.props.dataSource.map(
-                    item => {
-                        return (
-                            <View style={{ width: 350, height: 160 }} key={item.Identificador}>
-                                <Jugador onFav={this.props.onFav}
-                                    datos={item} />
-                            </View>)
-                    }
-                )}
+                <FlatList data={this.props.dataSource}
+                    renderItem={({ item }) => (
+                        <View style={{ width: 350, height: 160 }}>
+                            <Jugador onFav={this.props.onFav}
+                                datos={item} />
+                        </View>
+                    )}
+                    keyExtractor={item => item.Identificador} >
+                </FlatList>
             </View>
         )
     }
