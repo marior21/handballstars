@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
     StyleSheet,
     View,
-    FlatList
+    FlatList,Image
 } from 'react-native';
 import {
     Container,
@@ -14,13 +14,19 @@ import {
     Icon, Item, Input, List, ListItem,
     Text
 } from 'native-base';
+import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
 import Jugador from '../components/jugador.js'
-
+import imagenesJugadores from '../imagenesJugadores'
 export default class Jugadores extends Component {
     constructor(props) {
         super(props)
     }
-
+    _renderItem = ({ item }) => (
+        <View>
+        <Text>{item.Nombre}</Text>
+        <Image resizeMethod='auto' resizeMode='cover' source={imagenesJugadores[item.Identificador]} style={{ height: 160, width: 160, flex: 1 }} />
+      </View>
+    );
     render() {
         /*  return (<View>
               <List dataArray={this.props.dataSource}
@@ -34,17 +40,23 @@ export default class Jugadores extends Component {
                           </ListItem>
                       )
                   }
-              }></List></View>)*/
+              }></List></View>)
+              
+               <Jugador onFav={this.props.onFav}
+                                datos={item} />
+                                 <ListItem
+            roundAvatar
+            title={item.Nombre}
+            subtitle={item.Nombre}
+            avatar={{ uri: imagenesJugadores[item.Identificador]} }
+        />
+                                */
         return (
             <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
                 <FlatList data={this.props.dataSource}
-                    renderItem={({ item }) => (
-                        <View style={{ width: 350, height: 160 }}>
-                            <Jugador onFav={this.props.onFav}
-                                datos={item} />
-                        </View>
-                    )}
-                    keyExtractor={item => item.Identificador} >
+                    renderItem={this._renderItem}
+                    keyExtractor={item => item.Identificador}
+                    initialNumToRender={5} >
                 </FlatList>
             </View>
         )

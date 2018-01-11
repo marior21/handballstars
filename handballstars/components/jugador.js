@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component,PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -29,7 +29,7 @@ import imagenFav from '../images/full_star.png'
 import imagenNoFav from '../images/empty_star.png'
 import imagenesJugadores from '../imagenesJugadores';
 
-export default class Jugador extends Component {
+export default class Jugador extends PureComponent {
   constructor(props) {
     super(props)
     const rutaFoto = '../images/jugadores/AngelFernandez.jpg'// + props.datos.UrlImagen
@@ -60,9 +60,9 @@ export default class Jugador extends Component {
     return (
       <Card style={{ flex: 1, flexDirection: 'row' }}>
         <CardItem cardBody style={{ width: 130 }}>
-          <Image resizeMethod='scale' resizeMode='cover' source={imagenesJugadores[this.props.datos.Identificador]} style={{ height: 150, width: 150, flex: 1 }} />
+          <Image resizeMethod='auto' resizeMode='cover' source={imagenesJugadores[this.props.datos.Identificador]} style={{ height: 160, width: 160, flex: 1 }} />
         </CardItem>
-        <CardItem style={{ width: 215 }}>
+        <CardItem>
           <Body>
             <View style={styles.container}>
               <View style={[styles.cell, styles.texto]}>
@@ -81,13 +81,15 @@ export default class Jugador extends Component {
                 <View><Text>Place of Birth</Text></View>
                 <View><Text>Height</Text></View>
                 <View><Text>Weight</Text></View>
+                <View><Text>Club</Text></View>
               </View>
-              <View style={{width:50}}>
+              <View style={{width:80}}>
                 <View><Text>left</Text></View>
                 <View><Text>19</Text></View>
                 <View><Text>Santander</Text></View>
                 <View><Text>198 cm</Text></View>
                 <View><Text>87 kg</Text></View>
+                <View><Text>Ademar</Text></View>
               </View>
             </View>
           </Body>
@@ -102,14 +104,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: 200,
+    width: 220,
     height:40
   },
   cell:{
     height: 40
   },
   texto: {
-    width: 160,
+    width: 205,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'blue'

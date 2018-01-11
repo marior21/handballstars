@@ -182,11 +182,12 @@ export default class handballstars extends Component {
         <Header rounded>
           <Text>{titulo}</Text>
         </Header>
-        <Content>
-          <Item>
+        <Item>
             <Icon name="search" />
             <Input text={this.state.filtro} placeholder="Search" onChange={this.handleOnSearch} />
           </Item>
+        <Content>
+          
           {this.state.isReady ? <Jugadores onFav={this.handleOnFav} dataSource={jugadores}></Jugadores> : <Spinner />}
         </Content>
         <Footer>
