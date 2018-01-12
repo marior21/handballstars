@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import {
     StyleSheet,
     View,
-    FlatList,Image
+    FlatList,Image,VirtualizedList
 } from 'react-native';
 import {
     Container,
@@ -15,12 +15,41 @@ import {
     Text
 } from 'native-base';
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
+import {OptimizedFlatList} from 'react-native-optimized-flatlist';
 import Jugador from '../components/jugador.js'
 import imagenesJugadores from '../imagenesJugadores'
-export default class Jugadores extends Component {
+import _ from 'lodash'; 
+import { enableLogging } from '@firebase/database/dist/esm/src/core/util/util';
+
+const NUM_DATA = 10;
+
+export default class Jugadores extends PureComponent {
     constructor(props) {
         super(props)
+        this.state = {
+            data: null
+          }
     }
+
+    componentWillMount() {
+        
+        this.setState({data: this.getData(NUM_DATA, 0)})
+      }
+
+      getData = (num, skip) => {
+        const start = skip
+        const end = skip + num
+        return this.props.dataSource.slice(start,end);
+        //return _.range(start, end).map((x, i) => ({id: i, title: 'List Item ' + i}))
+      }
+
+      onEndReached = () => {
+        //return;
+        let data = this.state.data
+        let newData = data.concat(this.getData(NUM_DATA, data.length + 1))
+        this.setState({data: newData})
+      }
+
     _renderItem = ({ item }) => (
         <View>
         <Text>{item.Nombre}</Text>
@@ -52,12 +81,16 @@ export default class Jugadores extends Component {
         />
                                 */
         return (
-            <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
-                <FlatList data={this.props.dataSource}
+            <View>
+                <Text>Hola</Text>
+            <View>
+                <Text>Prueba</Text>
+                <FlatList data={this.state.data}
                     renderItem={this._renderItem}
-                    keyExtractor={item => item.Identificador}
-                    initialNumToRender={5} >
+                    keyExtractor={item => item.Identificador} 
+                    onEndReached={this.onEndReached}>
                 </FlatList>
+            </View>
             </View>
         )
     }
