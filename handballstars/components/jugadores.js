@@ -39,7 +39,7 @@ export default class Jugadores extends PureComponent {
       getData = (num, skip) => {
         const start = skip
         const end = skip + num
-        return this.props.dataSource.slice(start,end);
+        return this.props.dataSource;//.slice(start,end);
         //return _.range(start, end).map((x, i) => ({id: i, title: 'List Item ' + i}))
       }
 
@@ -51,13 +51,17 @@ export default class Jugadores extends PureComponent {
       }
 
     _renderItem = ({ item }) => (
+        <Jugador onFav={this.props.onFav} 
+                                  datos={item} />
+        
+    );
+    render() {
+        /*  
         <View>
         <Text>{item.Nombre}</Text>
         <Image resizeMethod='auto' resizeMode='cover' source={imagenesJugadores[item.Identificador]} style={{ height: 160, width: 160, flex: 1 }} />
       </View>
-    );
-    render() {
-        /*  return (<View>
+        return (<View>
               <List dataArray={this.props.dataSource}
               style={{flex:1,flexDirection:'row',flexWrap:'wrap'}}
               renderRow={
@@ -81,17 +85,14 @@ export default class Jugadores extends PureComponent {
         />
                                 */
         return (
-            <View>
-                <Text>Hola</Text>
-            <View>
-                <Text>Prueba</Text>
+            
                 <FlatList data={this.state.data}
                     renderItem={this._renderItem}
                     keyExtractor={item => item.Identificador} 
-                    onEndReached={this.onEndReached}>
+                    >
                 </FlatList>
-            </View>
-            </View>
+            
+            
         )
     }
 }

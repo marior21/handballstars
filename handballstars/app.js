@@ -178,9 +178,34 @@ export default class handballstars extends Component {
       )
     )
     return (
-      <View>
-        {this.state.isReady ? <Jugadores onFav={this.handleOnFav} dataSource={jugadores}></Jugadores> : <Text>Cargando...</Text>}
-      </View>
+      <Container>
+        <Header rounded>
+          <Text>{titulo}</Text>
+        </Header>
+        <Item>
+            <Icon name="search" />
+            <Input text={this.state.filtro} placeholder="Search" onChange={this.handleOnSearch} />
+          </Item>
+        <View style={{flex:1}}>  
+        {this.state.isReady ? <Jugadores onFav={this.handleOnFav} dataSource={jugadores}></Jugadores> : <Spinner />}
+        </View>
+        <Footer>
+          <FooterTab>
+            <Button vertical active={this.state.activeTab == 0} onPress={() => this.handleTabItem(0)}>
+              <Icon name="people" />
+              <Text>Players</Text>
+            </Button>
+            <Button vertical active={this.state.activeTab == 1} onPress={() => this.handleTabItem(1)}>
+              <Icon name="star" />
+              <Text>Favorites</Text>
+            </Button>
+            <Button vertical active={this.state.activeTab == 2} onPress={() => this.handleTabItem(2)}>
+              <Icon name="information-circle" />
+              <Text>About</Text>
+            </Button>
+          </FooterTab>
+        </Footer>
+      </Container>
       
     );
   }
