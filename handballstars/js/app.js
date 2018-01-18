@@ -15,9 +15,10 @@ import {
   Text,
   Spinner
 } from 'native-base';
-import Realm from 'realm'
-import Jugadores from './components/jugadores.js'
-import { db } from './config/firebase'
+import Realm from 'realm';
+import Jugadores from './components/jugadores.js';
+import { db } from './config/firebase';
+import GestorTabs from './gestorTabs.js';
 //import { JugadoresSchema } from './data/jugadoresSchema.js'
 //import { JugadorSchema } from './data/jugadorSchema.js'
 
@@ -60,15 +61,13 @@ export default class handballstars extends Component {
       activeTab: 0,
       jugadores: [],
       jugadoresFavs: [],
+      jugadoresFiltro: [],
+      titulo: '',
       filtro: ''
-    }
-    this.handleTabItem = this.handleTabItem.bind(this)
-    this.handleOnSearch = this.handleOnSearch.bind(this)
-    this.handleOnFav = this.handleOnFav.bind(this)
-  }
-
-  handleTabItem(indice) {
-    this.setState({ activeTab: indice })
+    };
+    this.handleTabItem = this.handleTabItem.bind(this);
+    this.handleOnSearch = this.handleOnSearch.bind(this);
+    this.handleOnFav = this.handleOnFav.bind(this);
   }
 
   componentWillMount() {
@@ -129,19 +128,37 @@ export default class handballstars extends Component {
             })*/
             this.setState({
               isReady: true,
-              jugadores: losJugadores
+              jugadores: losJugadores,
+              jugadoresFiltro: losJugadores
             })
           })
-         }
-        
+        }
+
       })
 
     })
 
   }
 
+  handleTabItem(indice) {
+    this.setState({ isReady: false })
+    const elGestor = new GestorTabs(this.state, indice);
+    this.setState({
+      titulo: elGestor.getTextoTab(),
+      jugadoresFiltro: elGestor.getJugadores(),
+      activeTab: indice,
+      isReady: true
+    })
+  }
+
   handleOnSearch(e) {
-    this.setState({ filtro: e.nativeEvent.text })
+    const filtro = e.nativeEvent.text;
+    this.setState({ filtro: filtro, isReady: false })
+    const elGestor = new GestorTabs(this.state, this.state.activeTab);
+    this.setState({
+      jugadoresFiltro: elGestor.getJugadores(filtro),
+      isReady: true
+    })
   }
 
   handleOnFav(jugador, favorito) {
@@ -152,42 +169,21 @@ export default class handballstars extends Component {
     else {
       jugadores.pop(jugador)
     }
-    this.setState({ jugadoresFavs: jugadores })
+    this.setState({ jugadoresFavs: jugadores });
   }
 
   render() {
-    let titulo
-    let jugadores = []
-    switch (this.state.activeTab) {
-      case 0:
-        titulo = 'Players'
-        jugadores = this.state.jugadores
-        break
-      case 1:
-        titulo = 'Favorites'
-        jugadores = this.state.jugadoresFavs
-        break
-      case 2:
-        titulo = 'About'
-        jugadores = []
-        break;
-    }
-    jugadores = jugadores.filter(
-      jugador => jugador.Nombre.toUpperCase().includes(
-        this.state.filtro.toUpperCase()
-      )
-    )
     return (
       <Container>
         <Header rounded>
-          <Text>{titulo}</Text>
+          <Text>{this.state.titulo}</Text>
         </Header>
         <Item>
-            <Icon name="search" />
-            <Input text={this.state.filtro} placeholder="Search" onChange={this.handleOnSearch} />
-          </Item>
-        <View style={{flex:1}}>  
-        {this.state.isReady ? <Jugadores onFav={this.handleOnFav} dataSource={jugadores}></Jugadores> : <Spinner />}
+          <Icon name="search" />
+          <Input placeholder="Search" onChange={this.handleOnSearch} />
+        </Item>
+        <View style={{ flex: 1, backgroundColor: '#eeeeee' }}>
+          {this.state.isReady ? <Jugadores onFav={this.handleOnFav} dataSource={this.state.jugadoresFiltro}></Jugadores> : <Spinner />}
         </View>
         <Footer>
           <FooterTab>
@@ -205,8 +201,7 @@ export default class handballstars extends Component {
             </Button>
           </FooterTab>
         </Footer>
-      </Container>
-      
+      </Container >
     );
   }
 }

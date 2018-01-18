@@ -22,7 +22,7 @@ import _ from 'lodash';
 import { enableLogging } from '@firebase/database/dist/esm/src/core/util/util';
 
 
-export default class Jugadores extends Component {
+export default class Jugadores extends PureComponent {
     constructor(props) {
         super(props)
         // screen sizing
