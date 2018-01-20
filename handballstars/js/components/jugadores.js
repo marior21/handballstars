@@ -1,28 +1,14 @@
 import React, { Component, PureComponent } from 'react';
+import { StyleSheet, View, FlatList, Image, Dimensions } from 'react-native';
 import {
-    StyleSheet,
-    View,
-    FlatList, Image, Dimensions
-} from 'react-native';
-import {
-    Container,
-    Header,
-    Content,
-    Footer,
-    FooterTab,
-    Button,
-    Icon, Item, Input, List, ListItem,
-    Text
+    Container, Header, Content, Footer, FooterTab,
+    Button, Icon, Item, Input, List, ListItem, Text
 } from 'native-base';
-import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
-import { OptimizedFlatList } from 'react-native-optimized-flatlist';
-import Jugador from '../components/jugador.js'
-import imagenesJugadores from '../imagenesJugadores'
-import _ from 'lodash';
-import { enableLogging } from '@firebase/database/dist/esm/src/core/util/util';
+import Jugador from '../components/jugador.js';
+import imagenesJugadores from '../imagenesJugadores';
 
 
-export default class Jugadores extends PureComponent {
+export default class Jugadores extends Component {
     constructor(props) {
         super(props)
         // screen sizing
@@ -53,7 +39,6 @@ export default class Jugadores extends PureComponent {
     renderItem = ({ item }) => (
         <Jugador onFav={this.props.onFav}
             datos={item} />
-
     );
     render() {
         return (

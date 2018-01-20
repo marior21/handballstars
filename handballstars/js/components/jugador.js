@@ -35,7 +35,7 @@ export default class Jugador extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
-      favorito: false
+      favorito: props.datos.Favorito
     }
     this.handleOnPressFavorito = this.handleOnPressFavorito.bind(this)
   }
@@ -51,7 +51,7 @@ export default class Jugador extends PureComponent {
   }
 
   componentWillMount() {
-//replace(/ /g,'')
+    //replace(/ /g,'')
   }
 
   render() {
@@ -101,7 +101,7 @@ export default class Jugador extends PureComponent {
           </View>
         </View>
         <View style={styles.containerBotom}>
-          <Image resizeMethod='scale' resizeMode='contain' source={imagenesEquipos[this.props.datos.Equipo.replace(/é/g,'e').replace(/ /g,'').replace(/ö/g,'o')]} style={{ height: 30, width: 30, marginRight: 10, marginTop: 3 }} />
+          <Image resizeMethod='scale' resizeMode='contain' source={imagenesEquipos[this.props.datos.Equipo.replace(/é/g, 'e').replace(/ /g, '').replace(/ö/g, 'o')]} style={{ height: 30, width: 30, marginRight: 10, marginTop: 3 }} />
           <Text style={{ marginTop: 9, fontSize: 16 }}>{this.props.datos.Equipo}</Text>
         </View>
       </View>
