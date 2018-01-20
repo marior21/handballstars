@@ -128,6 +128,7 @@ export default class handballstars extends Component {
               losJugadores.forEach(jugador => {
                 jugador.Favorito = jugadoresFavs.filter(favs => favs.idJugador === jugador.Identificador).length > 0;
               });
+              losJugadores = losJugadores.sort((j1, j2) => j1.Nombre.localeCompare(j2.Nombre));
               this.setState({
                 isReady: true,
                 jugadores: losJugadores,
@@ -208,7 +209,7 @@ export default class handballstars extends Component {
     return (
       <Container>
         <Header rounded>
-          <Text style={{ fontSize: 24, marginTop: 8, color: Platform.OS ? '#010' : '#fef' }}>{this.state.titulo}</Text>
+          <Text style={{ fontSize: 24, marginTop: 8, color: Platform.OS === 'ios' ? '#010' : '#fef' }}>{this.state.titulo}</Text>
         </Header>
         <Item>
           <Icon name="search" />
