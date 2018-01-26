@@ -72,7 +72,7 @@ export default class handballstars extends Component {
       let fechaBBDD;
       console.log(fechaActual)
       Realm.open({
-        schema: [JugadorSchema, JugadoreWrapperSchema]
+        schema: [JugadorSchema, JugadoreWrapperSchema, FavoritoSchema]
       }).then(realm => {
         console.log(realm.path)
         losJugadores = realm.objects('Jugador')
@@ -121,23 +121,24 @@ export default class handballstars extends Component {
 
             })*/
             let jugadoresFavs = [];
-            Realm.open({
-              schema: [FavoritoSchema]
-            }).then(realm => {
-              jugadoresFavs = realm.objects('Favorito');
-              losJugadores.forEach(jugador => {
-                jugador.Favorito = jugadoresFavs.filter(favs => favs.idJugador === jugador.Identificador).length > 0;
-              });
-              losJugadores = losJugadores.sort((j1, j2) => j1.Nombre.localeCompare(j2.Nombre));
-              this.setState({
-                isReady: true,
-                jugadores: losJugadores,
-                jugadoresFiltro: losJugadores,
-                jugadoresFavs: losJugadores.filter(
-                  jug => jugadoresFavs.filter(favs => favs.idJugador === jug.Identificador).length > 0)
-
-              });
+            jugadoresFavs = realm.objects('Favorito');
+            losJugadores.forEach(jugador => {
+              jugador.Favorito = jugadoresFavs.filter(favs => favs.idJugador === jugador.Identificador).length > 0;
             });
+            losJugadores = losJugadores.sort((j1, j2) => j1.Nombre.localeCompare(j2.Nombre));
+            this.setState({
+              isReady: true,
+              jugadores: losJugadores,
+              jugadoresFiltro: losJugadores,
+              jugadoresFavs: losJugadores.filter(
+                jug => jugadoresFavs.filter(favs => favs.idJugador === jug.Identificador).length > 0)
+
+            });
+            /* Realm.open({
+               schema: [FavoritoSchema]
+             }).then(realm => {
+               
+             });*/
 
 
           })
